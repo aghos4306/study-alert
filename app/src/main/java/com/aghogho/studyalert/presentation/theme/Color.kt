@@ -1,4 +1,4 @@
-package com.aghogho.studyalert.ui.theme
+package com.aghogho.studyalert.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
