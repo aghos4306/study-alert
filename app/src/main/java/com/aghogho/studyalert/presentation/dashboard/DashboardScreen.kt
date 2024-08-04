@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,8 +33,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aghogho.studyalert.R
 import com.aghogho.studyalert.domain.model.Subject
+import com.aghogho.studyalert.domain.model.Task
 import com.aghogho.studyalert.presentation.components.CountCard
 import com.aghogho.studyalert.presentation.components.SubjectCard
+import com.aghogho.studyalert.presentation.components.taskList
 
 @Composable
 fun DashboardScreen() {
@@ -44,6 +47,41 @@ fun DashboardScreen() {
         Subject(name = "Java Essentials", goalHours = 8f, colors = Subject.subjectCardColors[2]),
         Subject(name = "Economics", goalHours = 5f, colors = Subject.subjectCardColors[3]),
         Subject(name = "Android Basics", goalHours = 13f, colors = Subject.subjectCardColors[4]),
+    )
+
+    val dummyTask = listOf(
+        Task(
+            title = "Prepare Notes",
+            description = "",
+            dueDate = 0L,
+            priority = 1,
+            relatedToSubject = "",
+            isComplete = false
+        ),
+        Task(
+            title = "Revise Python",
+            description = "",
+            dueDate = 0L,
+            priority = 2,
+            relatedToSubject = "",
+            isComplete = true
+        ),
+        Task(
+            title = "Build Android Snoop Task",
+            description = "",
+            dueDate = 0L,
+            priority = 1,
+            relatedToSubject = "",
+            isComplete = false
+        ),
+        Task(
+            title = "Study Kotlin for Pro",
+            description = "",
+            dueDate = 0L,
+            priority = 3,
+            relatedToSubject = "",
+            isComplete = false
+        ),
     )
 
     Scaffold(
@@ -71,6 +109,25 @@ fun DashboardScreen() {
                     subjectList = dummySubjects
                 )
             }
+            item {
+                Button(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 48.dp, vertical = 20.dp)
+                ) {
+                    Text(text = "Start Study Session")
+                }
+            }
+
+            // TaskList
+            taskList(
+                sectionTitle = "UPCOMING TASKS",
+                emptyListText = "You don't have any upcoming tasks. \n " +
+                    "Click the + button in subject screen to add neww task.",
+                //tasks = emptyList()
+                tasks = dummyTask
+            )
         }
     }
 }
