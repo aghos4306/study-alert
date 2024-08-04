@@ -42,31 +42,37 @@ import com.aghogho.studyalert.presentation.components.taskList
 fun DashboardScreen() {
 
     val dummySubjects = listOf(
-        Subject(name = "Algorithm", goalHours = 10f, colors = Subject.subjectCardColors[0]),
-        Subject(name = "Kotlin", goalHours = 11f, colors = Subject.subjectCardColors[1]),
-        Subject(name = "Java Essentials", goalHours = 8f, colors = Subject.subjectCardColors[2]),
-        Subject(name = "Economics", goalHours = 5f, colors = Subject.subjectCardColors[3]),
-        Subject(name = "Android Basics", goalHours = 13f, colors = Subject.subjectCardColors[4]),
+        Subject(subjectId = 0, name = "Algorithm", goalHours = 10f, colors = Subject.subjectCardColors[0]),
+        Subject(subjectId = 0, name = "Kotlin", goalHours = 11f, colors = Subject.subjectCardColors[1]),
+        Subject(subjectId = 0, name = "Java Essentials", goalHours = 8f, colors = Subject.subjectCardColors[2]),
+        Subject(subjectId = 0, name = "Economics", goalHours = 5f, colors = Subject.subjectCardColors[3]),
+        Subject(subjectId = 0, name = "Android Basics", goalHours = 13f, colors = Subject.subjectCardColors[4]),
     )
 
     val dummyTask = listOf(
         Task(
+            taskId = 0,
+            taskSubjectId = 1,
             title = "Prepare Notes",
             description = "",
             dueDate = 0L,
-            priority = 1,
+            priority = 0,
             relatedToSubject = "",
             isComplete = false
         ),
         Task(
+            taskId = 0,
+            taskSubjectId = 1,
             title = "Revise Python",
             description = "",
             dueDate = 0L,
-            priority = 2,
+            priority = 1,
             relatedToSubject = "",
             isComplete = true
         ),
         Task(
+            taskId = 0,
+            taskSubjectId = 1,
             title = "Build Android Snoop Task",
             description = "",
             dueDate = 0L,
@@ -75,12 +81,24 @@ fun DashboardScreen() {
             isComplete = false
         ),
         Task(
+            taskId = 0,
+            taskSubjectId = 1,
             title = "Study Kotlin for Pro",
             description = "",
             dueDate = 0L,
-            priority = 3,
+            priority = 0,
             relatedToSubject = "",
             isComplete = false
+        ),
+        Task(
+            taskId = 0,
+            taskSubjectId = 1,
+            title = "Study Java",
+            description = "",
+            dueDate = 0L,
+            priority = 2,
+            relatedToSubject = "",
+            isComplete = true
         ),
     )
 
@@ -126,7 +144,9 @@ fun DashboardScreen() {
                 emptyListText = "You don't have any upcoming tasks. \n " +
                     "Click the + button in subject screen to add neww task.",
                 //tasks = emptyList()
-                tasks = dummyTask
+                tasks = dummyTask,
+                onCheckBoxClick = {},
+                onTaskCardClick = {}
             )
         }
     }
