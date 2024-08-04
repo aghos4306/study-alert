@@ -36,6 +36,7 @@ import com.aghogho.studyalert.domain.model.Subject
 import com.aghogho.studyalert.domain.model.Task
 import com.aghogho.studyalert.presentation.components.CountCard
 import com.aghogho.studyalert.presentation.components.SubjectCard
+import com.aghogho.studyalert.presentation.components.studySessionsList
 import com.aghogho.studyalert.presentation.components.taskList
 
 @Composable
@@ -142,11 +143,19 @@ fun DashboardScreen() {
             taskList(
                 sectionTitle = "UPCOMING TASKS",
                 emptyListText = "You don't have any upcoming tasks. \n " +
-                    "Click the + button in subject screen to add neww task.",
+                    "Click the + button in subject screen to add new task.",
                 //tasks = emptyList()
                 tasks = dummyTask,
                 onCheckBoxClick = {},
                 onTaskCardClick = {}
+            )
+
+            // StudySessionList
+            studySessionsList(
+                sectionTitle = "RECENT STUDY SESSION",
+                emptyListText = "You don't have any upcoming sessions. \n " +
+                        "Start a session to begin recording your progress.",
+                sessions = emptyList()
             )
         }
     }
