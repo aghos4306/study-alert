@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -32,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aghogho.studyalert.R
+import com.aghogho.studyalert.domain.model.Session
 import com.aghogho.studyalert.domain.model.Subject
 import com.aghogho.studyalert.domain.model.Task
 import com.aghogho.studyalert.presentation.components.CountCard
@@ -103,6 +105,37 @@ fun DashboardScreen() {
         ),
     )
 
+    val dummySession = listOf(
+        Session(
+            relatedToSubject = "Python",
+            date = 0L,
+            duration = 2,
+            sessionSubjectId = 0,
+            sessionId = 0
+        ),
+        Session(
+            relatedToSubject = "Advanced Kotlin",
+            date = 0L,
+            duration = 2,
+            sessionSubjectId = 0,
+            sessionId = 0
+        ),
+        Session(
+            relatedToSubject = "Generics In Kotlin",
+            date = 0L,
+            duration = 2,
+            sessionSubjectId = 0,
+            sessionId = 0
+        ),
+        Session(
+            relatedToSubject = "Snoop Task",
+            date = 0L,
+            duration = 2,
+            sessionSubjectId = 0,
+            sessionId = 0
+        ),
+    )
+
     Scaffold(
         topBar = { DashboardScreenTopBar() }
     ) { paddingValues ->
@@ -150,12 +183,18 @@ fun DashboardScreen() {
                 onTaskCardClick = {}
             )
 
+            item {
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+
             // StudySessionList
             studySessionsList(
                 sectionTitle = "RECENT STUDY SESSION",
                 emptyListText = "You don't have any upcoming sessions. \n " +
                         "Start a session to begin recording your progress.",
-                sessions = emptyList()
+                //sessions = emptyList(),
+                sessions = dummySession,
+                onDeleteIconClick = {  }
             )
         }
     }
