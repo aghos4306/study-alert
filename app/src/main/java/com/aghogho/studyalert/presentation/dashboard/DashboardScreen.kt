@@ -43,6 +43,7 @@ import com.aghogho.studyalert.domain.model.Subject
 import com.aghogho.studyalert.domain.model.Task
 import com.aghogho.studyalert.presentation.components.AddSubjectDialog
 import com.aghogho.studyalert.presentation.components.CountCard
+import com.aghogho.studyalert.presentation.components.DeleteDialog
 import com.aghogho.studyalert.presentation.components.SubjectCard
 import com.aghogho.studyalert.presentation.components.studySessionsList
 import com.aghogho.studyalert.presentation.components.taskList
@@ -143,6 +144,8 @@ fun DashboardScreen() {
     )
 
     var isAddSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var isDeleteDialogSessionOpen by rememberSaveable { mutableStateOf(false) }
+
     var subjectName by remember { mutableStateOf("") }
     var goalHours by remember { mutableStateOf("") }
     var selectedColor by remember { mutableStateOf(Subject.subjectCardColors.random()) }
@@ -159,6 +162,15 @@ fun DashboardScreen() {
         onSubjectNameChange = { subjectName = it },
         onColorChange = { selectedColor = it },
         selectedColors = selectedColor
+    )
+
+    DeleteDialog(
+        isOpen = isDeleteDialogSessionOpen,
+        title = "Delete Session?",
+        bodyText = "Are you sure, you want to delete this session? Your studied hours will be reduced " +
+                "by this session time. This action can not be undone.",
+        onDismissRequest = { isDeleteDialogSessionOpen = false },
+        onConfirmButtonClick = { isDeleteDialogSessionOpen = false }
     )
 
     Scaffold(
@@ -222,7 +234,7 @@ fun DashboardScreen() {
                         "Start a session to begin recording your progress.",
                 //sessions = emptyList(),
                 sessions = dummySession,
-                onDeleteIconClick = {  }
+                onDeleteIconClick = { isDeleteDialogSessionOpen = true }
             )
         }
     }
