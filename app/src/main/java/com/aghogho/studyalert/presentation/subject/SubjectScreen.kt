@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -26,6 +27,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +43,8 @@ import com.aghogho.studyalert.presentation.components.taskList
 
 @Composable
 fun SubjectScreen() {
+    val listState = rememberLazyListState()
+    val isFABExpanded by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
     Scaffold(
         topBar = {
             SubjectScreenTopBar(
@@ -53,11 +58,13 @@ fun SubjectScreen() {
             ExtendedFloatingActionButton(
                 onClick = { /*TODO*/ },
                 icon = { Icon(imageVector = Icons.Default.Add, contentDescription = "Add") },
-                text = { Text(text = "Add Task") }
+                text = { Text(text = "Add Task") },
+                expanded = isFABExpanded
             )
         }
     ) { paddingValues ->
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
