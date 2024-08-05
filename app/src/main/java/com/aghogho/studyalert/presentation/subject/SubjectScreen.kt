@@ -26,32 +26,88 @@ import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.aghogho.studyalert.domain.model.Subject
 import com.aghogho.studyalert.dummySession
 import com.aghogho.studyalert.dummyTask
+import com.aghogho.studyalert.presentation.components.AddSubjectDialog
 import com.aghogho.studyalert.presentation.components.CountCard
+import com.aghogho.studyalert.presentation.components.DeleteDialog
 import com.aghogho.studyalert.presentation.components.studySessionsList
 import com.aghogho.studyalert.presentation.components.taskList
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectScreen() {
     val listState = rememberLazyListState()
     val isFABExpanded by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
+    val scrollBehaviorType = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+    var isEditSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var isDeleteDialogSessionOpen by rememberSaveable { mutableStateOf(false) }
+    var isDeleteDialogSubjectOpen by rememberSaveable { mutableStateOf(false) }
+
+    var subjectName by remember { mutableStateOf("") }
+    var goalHours by remember { mutableStateOf("") }
+    var selectedColor by remember { mutableStateOf(Subject.subjectCardColors.random()) }
+
+    AddSubjectDialog(
+        isOpen = isEditSubjectDialogOpen,
+        onDismissRequest = { isEditSubjectDialogOpen = false },
+        onConfirmButtonClick = {
+            isEditSubjectDialogOpen = false
+        },
+        goalHours = goalHours,
+        subjectName = subjectName,
+        onGoalHoursChanged = { goalHours = it },
+        onSubjectNameChange = { subjectName = it },
+        onColorChange = { selectedColor = it },
+        selectedColors = selectedColor
+    )
+
+    // Delete Session
+    DeleteDialog(
+        isOpen = isDeleteDialogSessionOpen,
+        title = "Delete Session?",
+        bodyText = "Are you sure, you want to delete this session? Your studied hours will be reduced " +
+                "by this session time. This action can not be undone.",
+        onDismissRequest = { isDeleteDialogSessionOpen = false },
+        onConfirmButtonClick = { isDeleteDialogSessionOpen = false }
+    )
+
+    // Delete Subject
+    DeleteDialog(
+        isOpen = isDeleteDialogSubjectOpen,
+        title = "Delete Subject?",
+        bodyText = "Are you sure you want to delete this subject? All related " +
+            "tasks and study sessions will be permanently removed. This action cannot be undone",
+        onDismissRequest = { isDeleteDialogSubjectOpen = false },
+        onConfirmButtonClick = { isDeleteDialogSubjectOpen = false }
+    )
+
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehaviorType.nestedScrollConnection),
         topBar = {
             SubjectScreenTopBar(
                 title = "Kotlin Advanced",
                 onBackButtonClick = {  },
-                onDeleteButtonClick = {  },
-                onEditButtonClick = {  }
+                onDeleteButtonClick = { isDeleteDialogSessionOpen = true },
+                onEditButtonClick = { isEditSubjectDialogOpen = true },
+                scrollBehavior = scrollBehaviorType
             )
         },
         floatingActionButton = {
@@ -79,7 +135,7 @@ fun SubjectScreen() {
                     progress = 0.55f
                 )
             }
-            // TaskList
+            // TaskList for upcoming tasks
             taskList(
                 sectionTitle = "UPCOMING TASKS",
                 emptyListText = "You don't have any upcoming tasks. \n " +
@@ -94,7 +150,7 @@ fun SubjectScreen() {
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
-            // TaskList
+            // TaskList for completed tasks
             taskList(
                 sectionTitle = "COMPLETED TASKS",
                 emptyListText = "You don't have any completed tasks. \n " +
@@ -116,7 +172,7 @@ fun SubjectScreen() {
                         "Start a session to begin recording your progress.",
                 //sessions = emptyList(),
                 sessions = dummySession,
-                onDeleteIconClick = {  }
+                onDeleteIconClick = { isDeleteDialogSessionOpen = true }
             )
         }
     }
@@ -128,9 +184,11 @@ private fun SubjectScreenTopBar(
     title: String,
     onBackButtonClick: () -> Unit,
     onDeleteButtonClick: () -> Unit,
-    onEditButtonClick: () -> Unit
+    onEditButtonClick: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior
 ) {
     LargeTopAppBar(
+        scrollBehavior = scrollBehavior,
         navigationIcon = {
             IconButton(onClick = onBackButtonClick) {
                 Icon(
