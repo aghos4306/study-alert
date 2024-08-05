@@ -6,16 +6,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -29,7 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.aghogho.studyalert.dummySession
+import com.aghogho.studyalert.dummyTask
 import com.aghogho.studyalert.presentation.components.CountCard
+import com.aghogho.studyalert.presentation.components.studySessionsList
+import com.aghogho.studyalert.presentation.components.taskList
 
 @Composable
 fun SubjectScreen() {
@@ -40,6 +47,13 @@ fun SubjectScreen() {
                 onBackButtonClick = {  },
                 onDeleteButtonClick = {  },
                 onEditButtonClick = {  }
+            )
+        },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = { /*TODO*/ },
+                icon = { Icon(imageVector = Icons.Default.Add, contentDescription = "Add") },
+                text = { Text(text = "Add Task") }
             )
         }
     ) { paddingValues ->
@@ -58,6 +72,45 @@ fun SubjectScreen() {
                     progress = 0.55f
                 )
             }
+            // TaskList
+            taskList(
+                sectionTitle = "UPCOMING TASKS",
+                emptyListText = "You don't have any upcoming tasks. \n " +
+                        "Click the + button in subject screen to add new task.",
+                //tasks = emptyList()
+                tasks = dummyTask,
+                onCheckBoxClick = {},
+                onTaskCardClick = {}
+            )
+
+            item {
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+
+            // TaskList
+            taskList(
+                sectionTitle = "COMPLETED TASKS",
+                emptyListText = "You don't have any completed tasks. \n " +
+                        "Click the check box on completion of task.",
+                //tasks = emptyList()
+                tasks = dummyTask,
+                onCheckBoxClick = {},
+                onTaskCardClick = {}
+            )
+
+            item {
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+
+            // StudySessionList
+            studySessionsList(
+                sectionTitle = "RECENT STUDY SESSION",
+                emptyListText = "You don't have any upcoming sessions. \n " +
+                        "Start a session to begin recording your progress.",
+                //sessions = emptyList(),
+                sessions = dummySession,
+                onDeleteIconClick = {  }
+            )
         }
     }
 }
