@@ -28,20 +28,31 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.aghogho.studyalert.dummySubjects
 import com.aghogho.studyalert.presentation.components.DeleteDialog
+import com.aghogho.studyalert.presentation.components.SubjectDialogBottomSheet
 import com.aghogho.studyalert.presentation.components.TaskCheckbox
+import com.aghogho.studyalert.presentation.components.TaskDatePicker
 import com.aghogho.studyalert.util.Priority
+import com.aghogho.studyalert.util.changeMillisToDateString
+import kotlinx.coroutines.launch
+import java.time.Instant
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskScreen() {
 
@@ -49,6 +60,20 @@ fun TaskScreen() {
     var description by remember { mutableStateOf("") }
 
     var isTaskDeleteDialogSessionOpen by rememberSaveable { mutableStateOf(false) }
+
+    var isDatePickerDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var selectedDateMillis by rememberSaveable { mutableLongStateOf(Instant.now().toEpochMilli()) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = selectedDateMillis
+    )
+
+    println("Initial selectedDateMillis: $selectedDateMillis")
+    println("Formatted Date: ${selectedDateMillis.changeMillisToDateString()}")
+    println("DatePickerState: $datePickerState")
+
+    val sheetState = rememberModalBottomSheetState()
+    var isBottomSheetOpen by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     var taskTitleError by rememberSaveable { mutableStateOf<String?>(null) }
     taskTitleError = when {
@@ -73,6 +98,29 @@ fun TaskScreen() {
             "This action cannot be undone",
         onDismissRequest = { isTaskDeleteDialogSessionOpen = false },
         onConfirmButtonClick = { isTaskDeleteDialogSessionOpen = false }
+    )
+
+    TaskDatePicker(
+        state = datePickerState,
+        isOpen = isDatePickerDialogOpen,
+        onDismissRequest = { isDatePickerDialogOpen = false },
+        onConfirmButtonClicked = {
+            isDatePickerDialogOpen = false
+            selectedDateMillis = datePickerState.selectedDateMillis ?: Instant.now().toEpochMilli()
+        }
+    )
+
+    SubjectDialogBottomSheet(
+        sheetState = sheetState,
+        isOPen = isBottomSheetOpen,
+        subjects = dummySubjects,
+        //subjects = emptyList(),
+        onDismissRequest = { isBottomSheetOpen = false },
+        onSubjectClicked = {
+            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                if (!sheetState.isVisible) isBottomSheetOpen = false
+            }
+        }
     )
 
     Scaffold(
@@ -113,7 +161,7 @@ fun TaskScreen() {
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = "6th August 2024",
+                text = selectedDateMillis.changeMillisToDateString(), // selectedDateMillis is Long value, create extension fun that will convert Long value to String value
                 style = MaterialTheme.typography.bodySmall
             )
             Row(
@@ -125,7 +173,7 @@ fun TaskScreen() {
                     text = "Python Fundamental",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { isDatePickerDialogOpen = true }) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
                         contentDescription = "Select Due Date"
@@ -170,7 +218,7 @@ fun TaskScreen() {
                     text = "Python Fundamental",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { isBottomSheetOpen = true }) {
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = "Select Subject"
