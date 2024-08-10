@@ -44,7 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aghogho.studyalert.dummySubjects
 import com.aghogho.studyalert.presentation.components.DeleteDialog
-import com.aghogho.studyalert.presentation.components.SubjectDialogBottomSheet
+import com.aghogho.studyalert.presentation.components.SubjectListBottomDialogSheet
 import com.aghogho.studyalert.presentation.components.TaskCheckbox
 import com.aghogho.studyalert.presentation.components.TaskDatePicker
 import com.aghogho.studyalert.util.Priority
@@ -110,7 +110,7 @@ fun TaskScreen() {
         }
     )
 
-    SubjectDialogBottomSheet(
+    SubjectListBottomDialogSheet(
         sheetState = sheetState,
         isOPen = isBottomSheetOpen,
         subjects = dummySubjects,

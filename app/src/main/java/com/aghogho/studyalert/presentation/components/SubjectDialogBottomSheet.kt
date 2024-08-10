@@ -24,7 +24,7 @@ import com.aghogho.studyalert.domain.model.Subject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SubjectDialogBottomSheet(
+fun SubjectListBottomDialogSheet(
     sheetState: SheetState,
     isOPen: Boolean,
     subjects: List<Subject>,
