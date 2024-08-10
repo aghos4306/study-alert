@@ -6,8 +6,7 @@ import androidx.activity.compose.setContent
 import com.aghogho.studyalert.domain.model.Session
 import com.aghogho.studyalert.domain.model.Subject
 import com.aghogho.studyalert.domain.model.Task
-import com.aghogho.studyalert.presentation.dashboard.DashboardScreen
-import com.aghogho.studyalert.presentation.subject.SubjectScreen
+import com.aghogho.studyalert.presentation.session.SessionScreen
 import com.aghogho.studyalert.presentation.theme.StudyAlertTheme
 
 class MainActivity : ComponentActivity() {
@@ -16,7 +15,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             StudyAlertTheme {
                 //DashboardScreen()
-                SubjectScreen()
+                //SubjectScreen()
+                //TaskScreen()
+                SessionScreen()
             }
         }
     }
