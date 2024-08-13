@@ -38,9 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aghogho.studyalert.R
-import com.aghogho.studyalert.domain.model.Session
 import com.aghogho.studyalert.domain.model.Subject
-import com.aghogho.studyalert.domain.model.Task
 import com.aghogho.studyalert.dummySession
 import com.aghogho.studyalert.dummySubjects
 import com.aghogho.studyalert.dummyTask
@@ -50,9 +48,42 @@ import com.aghogho.studyalert.presentation.components.DeleteDialog
 import com.aghogho.studyalert.presentation.components.SubjectCard
 import com.aghogho.studyalert.presentation.components.studySessionsList
 import com.aghogho.studyalert.presentation.components.taskList
+import com.aghogho.studyalert.presentation.destinations.SessionScreenRouteDestination
+import com.aghogho.studyalert.presentation.destinations.SubjectScreenRouteDestination
+import com.aghogho.studyalert.presentation.destinations.TaskScreenRouteDestination
+import com.aghogho.studyalert.presentation.subject.SubjectScreenNavArgs
+import com.aghogho.studyalert.presentation.task.TaskScreenNavArgs
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
+@Destination(start = true)
+@Composable
+fun DashboardScreenRoute(
+    navigator: DestinationsNavigator
+) {
+    DashboardScreen(
+        onSubjectCardClick = { subjectId ->
+            subjectId?.let {
+                val navArg = SubjectScreenNavArgs(subjectId = subjectId)
+                navigator.navigate(SubjectScreenRouteDestination(navArgs = navArg))
+            }
+        },
+        onTaskCardClick = { taskId ->
+            val navArg = TaskScreenNavArgs(taskId = taskId, subjectId = null)
+            navigator.navigate(TaskScreenRouteDestination(navArgs = navArg))
+        },
+        onStartSessionButtonClick = {
+            navigator.navigate(SessionScreenRouteDestination())
+        }
+    )
+}
 
 @Composable
-fun DashboardScreen() {
+private fun DashboardScreen(
+    onSubjectCardClick: (Int?) -> Unit,
+    onTaskCardClick: (Int?) -> Unit,
+    onStartSessionButtonClick: () -> Unit
+) {
 
     var isAddSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
     var isDeleteDialogSessionOpen by rememberSaveable { mutableStateOf(false) }
@@ -107,14 +138,13 @@ fun DashboardScreen() {
                     modifier = Modifier.fillMaxWidth(),
                     //subjectList = emptyList()
                     subjectList = dummySubjects,
-                    onAddIconClicked = {
-                        isAddSubjectDialogOpen = true
-                    }
+                    onAddIconClicked = { isAddSubjectDialogOpen = true },
+                    onSubjectCardClick = onSubjectCardClick
                 )
             }
             item {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = onStartSessionButtonClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 48.dp, vertical = 20.dp)
@@ -131,7 +161,7 @@ fun DashboardScreen() {
                 //tasks = emptyList()
                 tasks = dummyTask,
                 onCheckBoxClick = {},
-                onTaskCardClick = {}
+                onTaskCardClick = onTaskCardClick
             )
 
             item {
@@ -197,7 +227,8 @@ private fun SubjectCardsSection(
     modifier: Modifier,
     subjectList: List<Subject>,
     emptyListText: String = "You don't have any subjects. \n Click the + icon to add subject",
-    onAddIconClicked: () -> Unit
+    onAddIconClicked: () -> Unit,
+    onSubjectCardClick: (Int?) -> Unit
 ) {
     Column(modifier = modifier) {
         //First content
@@ -243,7 +274,7 @@ private fun SubjectCardsSection(
                 SubjectCard(
                     subjectName = subject.name,
                     gradientColors = subject.colors,
-                    onClick = {}
+                    onClick = { onSubjectCardClick(subject.subjectId) }
                 )
             }
         }

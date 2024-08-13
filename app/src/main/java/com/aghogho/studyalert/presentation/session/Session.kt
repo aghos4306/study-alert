@@ -39,11 +39,25 @@ import com.aghogho.studyalert.dummySubjects
 import com.aghogho.studyalert.presentation.components.DeleteDialog
 import com.aghogho.studyalert.presentation.components.SubjectListBottomDialogSheet
 import com.aghogho.studyalert.presentation.components.studySessionsList
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
+
+@Destination
+@Composable
+fun SessionScreenRoute(
+    navigator: DestinationsNavigator
+) {
+    SessionScreen(
+        onBackButtonClick = { navigator.navigateUp() }
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SessionScreen() {
+private fun SessionScreen(
+    onBackButtonClick: () -> Unit
+) {
 
     var isBottomSheetOpen by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
@@ -75,7 +89,7 @@ fun SessionScreen() {
 
     Scaffold(
         topBar = {
-            SessionScreenTopBar(onBackButtonClick = {})
+            SessionScreenTopBar(onBackButtonClick = onBackButtonClick)
         }
     ) { paddingValues ->
         LazyColumn(

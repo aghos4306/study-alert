@@ -6,8 +6,9 @@ import androidx.activity.compose.setContent
 import com.aghogho.studyalert.domain.model.Session
 import com.aghogho.studyalert.domain.model.Subject
 import com.aghogho.studyalert.domain.model.Task
-import com.aghogho.studyalert.presentation.session.SessionScreen
+import com.aghogho.studyalert.presentation.NavGraphs
 import com.aghogho.studyalert.presentation.theme.StudyAlertTheme
+import com.ramcosta.composedestinations.DestinationsNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +18,8 @@ class MainActivity : ComponentActivity() {
                 //DashboardScreen()
                 //SubjectScreen()
                 //TaskScreen()
-                SessionScreen()
+                //SessionScreen()
+                DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
     }
